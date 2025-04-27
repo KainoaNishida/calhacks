@@ -39,5 +39,8 @@
   "packageManager": "yarn@1.22.22",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@mui/icons-material": "^7.0.2"
   }
 }

@@ -2,7 +2,7 @@ import { Admin } from "@/components/admin/Admin";
 import { CatchAll } from "@/components/CatchAll";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { Login } from "@/components/login/Login";
-import { Landing } from "@/components/landing/Landing";
+import Landing from "@/components/landing/Landing";
 // import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Signup } from "@/components/signup/Signup";
 // import { AuthProvider } from "@/contexts/AuthContext";

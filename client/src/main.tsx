@@ -47,7 +47,7 @@ const colors = {
       color: '#555',
     },
   },
-  
+
 };
 
 const theme = createTheme(colors);
