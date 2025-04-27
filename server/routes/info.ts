@@ -17,7 +17,7 @@ infoRouter.use(express.json());
 
 // SERP API setup
 const SERP_API_URL = 'https://serpapi.com/search';
-const SERP_API_KEY = process.env.SERP_API; 
+const SERP_API_KEY = process.env.SERP_API;
 
 infoRouter.get("/", async(req, res) => {
     try{
@@ -28,7 +28,7 @@ infoRouter.get("/", async(req, res) => {
         const resp4 = await axios.get(`https://api.sec-api.io/mapping/industry/Apparel Manufacturing?token=${process.env.SEC_API}`);
         const resp5 = await axios.get(`https://api.sec-api.io/mapping/industry/Apparel Stores?token=${process.env.SEC_API}`);
         // const resp6 = await axios.get(`https://api.sec-api.io/mapping/industry/Tools & Accessories?token=${process.env.SEC_API}`);
-        //store in db 
+        //store in db
         const total = [...resp4.data, ...resp5.data,];
 
         // Filter to show only ticker, name, id, and locoation
@@ -46,13 +46,13 @@ infoRouter.get("/", async(req, res) => {
 
         // // 👇 INSERT INTO MONGO
         // await collection.insertMany(filtered);
-        
+
         console.log("Inserted into MongoDB:", filtered.length, "documents");
         res.status(200).json(filtered);
     } catch(e){
         res.status(400).send(e.message);
     }
-    
+
 
 })
 
@@ -118,26 +118,26 @@ infoRouter.get("/normalize-esg", async (req, res) => {
 
         // Fetch all company documents
         const companies = await collection.find({}).toArray();
-  
+
       // Loop through each company and normalize their ESG score
       for (let company of companies) {
         const rawEsg = company.esg.totalEsg.raw;
-  
+
         if (rawEsg !== null && !isNaN(rawEsg)) {
-          const minValue = 13.44; 
-          const maxValue = 28.6; 
-  
+          const minValue = 13.44;
+          const maxValue = 28.6;
+
           // Normalize the raw ESG score
           const normalizedEsg = (rawEsg - minValue) / (maxValue - minValue);
-  
+
           // Update the company document with the normalized ESG value
         await collection.updateOne(
-            { _id: company._id }, 
+            { _id: company._id },
             { $set: { 'esg.totalEsg.normalized': normalizedEsg } }
         );
         }
       }
-  
+
       res.status(200).json({ message: "ESG scores normalized successfully!" });
     } catch (error) {
       console.error(error);
@@ -146,7 +146,7 @@ infoRouter.get("/normalize-esg", async (req, res) => {
   });
 
   infoRouter.post("/search", async (req, res) => {
-    const { searchTerm } = req.body; 
+    const { searchTerm } = req.body;
 
     try {
         await client.connect();
@@ -165,11 +165,11 @@ infoRouter.get("/normalize-esg", async (req, res) => {
         for (let company of companies) {
           const companyName = company.name;
           const esgScore = company.esg.totalEsg.normalized;
-  
+
           // Construct the query for the SERP API
           const query = `${companyName} ${searchTerm}`;
-          
-  
+
+
           try {
               // Make the API request to the SERP API
               const response = await axios.get(SERP_API_URL, {
@@ -178,16 +178,16 @@ infoRouter.get("/normalize-esg", async (req, res) => {
                   api_key: SERP_API_KEY,
               },
               });
-  
+
               // Collect the relevant data from the SERP API response
               const result = {
                   company: companyName,
                   searchTerm,
                   esgScore,
-                  esg: company.esg, 
+                  esg: company.esg,
                   searchResults: response.data.organic_results,  // Results from SERP API
               };
-  
+
               searchResults.push(result);
           } catch (error) {
               console.error(`Error searching for ${companyName}:`, error.message);

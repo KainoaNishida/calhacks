@@ -12,7 +12,7 @@ import {
   styled,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import LOGO from '../imgs/logo.png';
+import LOGO from '../../../public/imgs/logo.png';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
