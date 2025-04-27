@@ -122,19 +122,68 @@ infoRouter.get("/normalize-esg", async (req, res) => {
       // Loop through each company and normalize their ESG score
       for (let company of companies) {
         const rawEsg = company.esg.totalEsg.raw;
+        const governancePerf = company.esg?.peerGovernancePerformance;
+        const socialPerf = company.esg?.peerSocialPerformance;
+      const environmentPerf = company.esg?.peerEnvironmentPerformance;
+
+        const updateFields: any = {};
   
         if (rawEsg !== null && !isNaN(rawEsg)) {
           const minValue = 13.44; 
           const maxValue = 28.6; 
   
           // Normalize the raw ESG score
-          const normalizedEsg = (rawEsg - minValue) / (maxValue - minValue);
+        //   const normalizedEsg = (rawEsg - minValue) / (maxValue - minValue);
+
+          // Normalize peerGovernancePerformance
+          if (
+            governancePerf && 
+            typeof governancePerf.avg === 'number' && 
+            typeof governancePerf.min === 'number' && 
+            typeof governancePerf.max === 'number' &&
+            governancePerf.max !== governancePerf.min // prevent divide by 0
+          ) {
+            const normalizedGovernance = (governancePerf.avg - governancePerf.min) / (governancePerf.max - governancePerf.min);
+    
+            updateFields['esg.peerGovernancePerformance.normalized'] = normalizedGovernance;
+          }
+
+          // Normalize peerSocialPerformance
+      if (
+        socialPerf && 
+        typeof socialPerf.avg === 'number' && 
+        typeof socialPerf.min === 'number' && 
+        typeof socialPerf.max === 'number' &&
+        socialPerf.max !== socialPerf.min // prevent divide by 0
+      ) {
+        const normalizedSocial = (socialPerf.avg - socialPerf.min) / (socialPerf.max - socialPerf.min);
+        updateFields['esg.peerSocialPerformance.normalized'] = normalizedSocial;
+      }
+
+      // Normalize peerEnvironmentPerformance
+      if (
+        environmentPerf && 
+        typeof environmentPerf.avg === 'number' && 
+        typeof environmentPerf.min === 'number' && 
+        typeof environmentPerf.max === 'number' &&
+        environmentPerf.max !== environmentPerf.min // prevent divide by 0
+      ) {
+        const normalizedEnvironment = (environmentPerf.avg - environmentPerf.min) / (environmentPerf.max - environmentPerf.min);
+        updateFields['esg.peerEnvironmentPerformance.normalized'] = normalizedEnvironment;
+      }
+
+      if (Object.keys(updateFields).length > 0) {
+        await collection.updateOne(
+          { _id: company._id },
+          { $set: updateFields }
+        );
+      }
   
           // Update the company document with the normalized ESG value
-        await collection.updateOne(
-            { _id: company._id }, 
-            { $set: { 'esg.totalEsg.normalized': normalizedEsg } }
-        );
+        // await collection.updateOne(
+        //     { _id: company._id }, 
+        //     { $set: { 'esg.totalEsg.normalized': normalizedEsg } }
+        // );
         }
       }
   
