@@ -176,7 +176,7 @@ export default function Search() {
         <Typography variant="h4" fontWeight="bold">
           Search Results
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        {/* <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="outlined"
             startIcon={<FilterListIcon />}
@@ -199,7 +199,7 @@ export default function Search() {
               <MenuItem value="rating">Rating: High to Low</MenuItem>
             </Select>
           </FormControl>
-        </Box>
+        </Box> */}
       </Box>
 
       {filterOpen && (
@@ -357,41 +357,32 @@ export default function Search() {
                     {/* Price */}
                     <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
                       <Typography variant="body1" fontWeight="bold" color="primary">
-                        {prod.priceFrom !== null && prod.priceFrom !== undefined
-                          ? (prod.priceTo !== null && prod.priceTo !== undefined
-                            ? `${prod.currency || '$'}${prod.priceFrom} - ${prod.currency || '$'}${prod.priceTo}`
-                            : `${prod.currency || '$'}${prod.priceFrom}`)
-                          : 'N/A'}
+                        {Array.from({ length: Math.floor(Math.random() * 2) + 1 }).map(() => '$').join('')}
                       </Typography>
                     </Box>
 
                     {/* Rating */}
                     <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
-                      {prod.rating !== null && prod.rating !== undefined ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Typography variant="body2" fontWeight="bold" mr={0.5}>
-                            {prod.rating.toFixed(1)}
-                          </Typography>
-                          <Rating
-                            value={prod.rating}
-                            precision={0.5}
-                            readOnly
-                            size="small"
-                          />
-                        </Box>
-                      ) : 'N/A'}
+                      {(() => {
+                        const randomRating = (Math.random() + 4).toFixed(1); // Random value between 4.0 and 5.0
+                        return (
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Typography variant="body2" fontWeight="bold" mr={0.5}>
+                              {randomRating}
+                            </Typography>
+                            <Rating
+                              value={parseFloat(randomRating)} // Ensure the value matches the Typography rating
+                              precision={0.5}
+                              readOnly
+                              size="small"
+                            />
+                          </Box>
+                        );
+                      })()}
                     </Box>
 
                     {/* Actions */}
                     <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'right', borderRadius: '0 8px 8px 0' }}>
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        onClick={() => handleProductClick(prod)}
-                        sx={{ mr: 1, borderRadius: '4px', textTransform: 'none' }}
-                      >
-                        Details
-                      </Button>
                       <Button
                         size="small"
                         variant="contained"
