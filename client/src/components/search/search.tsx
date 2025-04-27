@@ -33,6 +33,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { useBackendContext } from '@/contexts/hooks/useBackendContext';
 import { SearchContext } from '@/contexts/SearchContext';
 import { CompanyModal } from '@/components/CompanyModal';
+import axios from 'axios';
 
 interface RawCompany {
   company: string;
@@ -69,6 +70,7 @@ interface Product {
   favicon: string;
   companyName: string;
   esg: any;
+  desc: string; // Added desc property
 }
 
 export default function Search() {
@@ -76,6 +78,7 @@ export default function Search() {
   const { searchTerm: q } = useContext(SearchContext);
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [productDBInfo, setProductDBInfo] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +89,133 @@ export default function Search() {
 
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
 
+  const ProductRow = ({ prod, setSelectedProduct, dbInfo }) => {
+    const [imgSrc, setImgSrc] = useState(prod.thumbnail); // Initially, set the image to the thumbnail
+    const [loading, setLoading] = useState(true); // Loading state for the image fetch
+    const [error, setError] = useState(null); // Error state for handling failed requests
+  
+    useEffect(() => {
+      console.log("DB Info:", dbInfo);
+      console.log("Product db info:", productDBInfo);
+    }, [dbInfo]);
+  
+    return (
+      <Box
+        key={prod.id}
+        sx={{
+          display: 'table-row',
+          bgcolor: 'background.paper',
+          boxShadow: '0 2px 5px rgba(0,0,0,0.08)',
+          borderRadius: '8px',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+          },
+        }}
+      >
+        {/* Product */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', borderRadius: '8px 0 0 8px' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: 1,
+                overflow: 'hidden',
+                bgcolor: 'rgba(0, 0, 0, 0.04)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <img
+                src={dbInfo.img} // Use the imgSrc state to dynamically update the image source
+                alt={prod.title}
+                style={{ width: '75px', height: '75px', objectFit: 'contain' }}
+              />
+            </Box>
+            <Typography
+              variant="subtitle1"
+              fontWeight="medium"
+              sx={{
+                maxWidth: '200px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {prod.title}
+            </Typography>
+          </Box>
+        </Box>
+  
+        {/* Company */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle' }}>
+          <Typography variant="body2" color="text.primary">
+            {prod.companyName}
+          </Typography>
+        </Box>
+  
+        {/* ESG Score */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
+          <Chip
+            label={prod.esg?.totalEsg?.normalized?.toFixed(1) || 'N/A'}
+            color="success"
+            size="small"
+            sx={{ fontWeight: 'bold', minWidth: '60px' }}
+          />
+        </Box>
+  
+        {/* Price */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
+          <Typography variant="body1" fontWeight="bold" color="primary">
+            {Array.from({ length: Math.floor(Math.random() * 2) + 1 }).map(() => '$').join('')}
+          </Typography>
+        </Box>
+  
+        {/* Rating */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
+          {(() => {
+            const randomRating = (Math.random() + 4).toFixed(1); // Random value between 4.0 and 5.0
+            return (
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="body2" fontWeight="bold" mr={0.5}>
+                  {randomRating}
+                </Typography>
+                <Rating
+                  value={parseFloat(randomRating)} // Ensure the value matches the Typography rating
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                />
+              </Box>
+            );
+          })()}
+        </Box>
+  
+        {/* Actions */}
+        <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'right', borderRadius: '0 8px 8px 0' }}>
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              console.log(prod.companyName);
+              setSelectedProduct(prod);
+            }}
+            sx={{ borderRadius: '4px', textTransform: 'none', backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
+          >
+            View
+          </Button>
+        </Box>
+      </Box>
+    );
+  };
+
 
   const itemsPerPage = 10;
 
@@ -93,7 +223,7 @@ export default function Search() {
     (async () => {
       setIsLoading(true);
       setError(null);
-
+  
       try {
         const resp = await backend.post<RawCompany[]>('/companies/search', { searchTerm: q });
         const raw = resp.data;
@@ -102,9 +232,9 @@ export default function Search() {
           .map((companyItem, idx) => {
             const first = companyItem.searchResults?.[0];
             if (!first) return null;
-
+  
             const extensions = first.rich_snippet?.bottom?.detected_extensions || {};
-
+  
             return {
               id: idx,
               title: first.title,
@@ -120,9 +250,33 @@ export default function Search() {
             };
           })
           .filter((p): p is Product => p !== null);
-
+  
         setProducts(mapped);
         setPage(1);
+        console.log('Products:', mapped);
+  
+        // Fetch the product DB info for each companyName
+        const fetchDBInfo = async () => {
+          const dbInfoPromises = mapped.map(async (product) => {
+            if (product?.companyName) {
+              try {
+                const dbResp = (await backend.get(`/companies/${product.companyName}`)).data.company;
+                console.log(`DB info for ${product.companyName}:`, dbResp);
+                return { dbResp };
+              } catch (err) {
+                console.error(`Failed to fetch DB info for ${product.companyName}:`, err);
+                return { companyName: product.companyName, dbInfo: null };
+              }
+            }
+            return { companyName: product.companyName, dbInfo: null };
+          });
+  
+          // Wait for all DB info requests to complete
+          const dbInfo = await Promise.all(dbInfoPromises);
+          setProductDBInfo(dbInfo);
+        };
+  
+        fetchDBInfo();
       } catch (err: any) {
         setError(err.message || 'Failed to fetch products');
       } finally {
@@ -284,119 +438,12 @@ export default function Search() {
               {/* Table Body */}
               <Box sx={{ display: 'table-row-group' }}>
                 {displayed.map((prod) => (
-                  <Box
+                  <ProductRow
                     key={prod.id}
-                    sx={{
-                      display: 'table-row',
-                      bgcolor: 'background.paper',
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.08)',
-                      borderRadius: '8px',
-                      transition: 'transform 0.2s, box-shadow 0.2s',
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
-                      }
-                    }}
-                  >
-                    {/* Product */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', borderRadius: '8px 0 0 8px' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box
-                          sx={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: 1,
-                            overflow: 'hidden',
-                            bgcolor: 'rgba(0, 0, 0, 0.04)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            mr: 2
-                          }}
-                        >
-                          <img
-                            src={prod.thumbnail}
-                            alt={prod.title}
-                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                          />
-                        </Box>
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight="medium"
-                          sx={{
-                            maxWidth: '200px',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical'
-                          }}
-                        >
-                          {prod.title}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {/* Company */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle' }}>
-                      <Typography variant="body2" color="text.primary">
-                        {prod.companyName}
-                      </Typography>
-                    </Box>
-
-                    {/* ESG Score */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
-                      <Chip
-                        label={prod.esg?.totalEsg?.normalized?.toFixed(1) || 'N/A'}
-                        color="success"
-                        size="small"
-                        sx={{ fontWeight: 'bold', minWidth: '60px' }}
-                      />
-                    </Box>
-
-                    {/* Price */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
-                      <Typography variant="body1" fontWeight="bold" color="primary">
-                        {Array.from({ length: Math.floor(Math.random() * 2) + 1 }).map(() => '$').join('')}
-                      </Typography>
-                    </Box>
-
-                    {/* Rating */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
-                      {(() => {
-                        const randomRating = (Math.random() + 4).toFixed(1); // Random value between 4.0 and 5.0
-                        return (
-                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Typography variant="body2" fontWeight="bold" mr={0.5}>
-                              {randomRating}
-                            </Typography>
-                            <Rating
-                              value={parseFloat(randomRating)} // Ensure the value matches the Typography rating
-                              precision={0.5}
-                              readOnly
-                              size="small"
-                            />
-                          </Box>
-                        );
-                      })()}
-                    </Box>
-
-                    {/* Actions */}
-                    <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'right', borderRadius: '0 8px 8px 0' }}>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>{
-                          console.log(prod.companyName)
-                          setSelectedProduct(prod);
-                        } }
-                        sx={{ borderRadius: '4px', textTransform: 'none', backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
-                      >
-                        View
-                      </Button>
-                    </Box>
-                  </Box>
+                    prod={prod}
+                    setSelectedProduct={setSelectedProduct}
+                    dbInfo={productDBInfo.find(info => info.dbResp.name === prod.companyName)?.dbResp}
+                  />
                 ))}
                 {/* Company Modal */}
                 {selectedProduct && (
@@ -405,7 +452,7 @@ export default function Search() {
                     onClose={() => setSelectedProduct(null)} // Close when modal is closed
                     companyName={selectedProduct.companyName}
                     esg={selectedProduct.esg}
-                    link={selectedProduct.link}
+                    desc={productDBInfo.find(info => info.dbResp.name === selectedProduct.companyName)?.dbResp?.desc}
                   />)}
               </Box>
             </Box>

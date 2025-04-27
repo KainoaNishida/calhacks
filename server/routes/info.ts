@@ -56,6 +56,29 @@ infoRouter.get("/", async(req, res) => {
 
 })
 
+infoRouter.get('/:companyName', async (req, res) => {
+    const { companyName } = req.params;
+    
+    try {
+      // Query the MongoDB collection to find the company by its name
+      await client.connect();
+      const db = client.db('green_companies');
+      const collection = db.collection('company_info');
+      const company = await collection.findOne({ name: companyName });
+      
+      if (!company) {
+        return res.status(404).json({ message: 'Company not found' });
+      }
+  
+      // If the company is found, return the dbInfo
+      res.json({ company });
+    } catch (error) {
+      console.error('Error fetching company info:', error);
+      res.status(500).json({ message: 'Error fetching company info' });
+    }
+  });
+  
+
 infoRouter.get("/esg", async (req, res) => {
     try {
         await client.connect();

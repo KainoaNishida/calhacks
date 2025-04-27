@@ -15,6 +15,7 @@ interface CompanyModalProps {
   companyName: string;
   esg: ESGScores;
   link: string;
+  desc: string;
 }
 
 const style = {
@@ -31,7 +32,7 @@ const style = {
   overflowY: 'auto',
 };
 
-export const CompanyModal: React.FC<CompanyModalProps> = ({ open, onClose, companyName, esg, link }) => {
+export const CompanyModal: React.FC<CompanyModalProps> = ({ open, onClose, companyName, esg, link, desc }) => {
 
     const handleGoToSeller = () => {
         window.open(link, '_blank');
@@ -95,7 +96,7 @@ export const CompanyModal: React.FC<CompanyModalProps> = ({ open, onClose, compa
             Company Description
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            "This will be description of the company. It will be a long description that will be used to describe the product in detail. This will be description of the product. It will be a long description that will be used to describe the product in detail."
+            {desc}
           </Typography>
         </Box>
 
