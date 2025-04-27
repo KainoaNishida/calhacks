@@ -1,6 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { BackendProvider } from "./contexts/BackendContext";
+import { SearchProvider } from "./contexts/SearchContext";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import App from "./App.tsx";
@@ -22,8 +25,12 @@ const theme = createTheme(colors);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <BackendProvider>
+      <SearchProvider>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </SearchProvider>
+    </BackendProvider>
   </StrictMode>
 );
