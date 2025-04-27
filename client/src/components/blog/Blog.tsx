@@ -1,60 +1,179 @@
 import React from 'react';
-import { Typography, Box, Button, Card, CardContent, CardMedia, Link } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Button, 
+  Container,
+  Grid,
+  Divider,
+  useTheme,
+  useMediaQuery,
+  Link
+} from '@mui/material';
+// import BIRDS from 'vanta/dist/vanta.birds.min'; // Removed as it's unused
+
 
 const Blog = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <Box sx={{ mb: 8 }}>
-      <Typography variant="h2" color="primary" gutterBottom>
-        Sustainable Sourcing
-      </Typography>
-      <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center' }}>
-        <CardMedia
-          component="img"
+    <Box sx={{ backgroundColor: '#FAFDF7' }}>
+      {/* Hero Section */}
+      <Box sx={{
+        height: '100vh',
+        width: '100%',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundImage: 'url(/allbirds-hero.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        }
+      }}>
+        <Typography 
+          variant="h1" 
           sx={{
-            width: { xs: '100%', md: '50%' },
-            height: {xs: 'auto', md: '100%'},
-            objectFit: 'cover',
-            borderRadius: '8px 0 0 8px', 
-            order: {xs: 0, md: -1},
-            mt: { xs: 2, md: 2.5 }, // Margin top for mobile view
+            color: '#FFFFFF',
+            position: 'relative',
+            textAlign: 'center',
+            maxWidth: '800px',
+            fontSize: { xs: '2.5rem', md: '4rem' },
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2,
+            px: 3
           }}
-          image="/allbirds.jpg" 
-          alt="Sustainable Sourcing"
-        />
-        <CardContent sx={{ flex: 1, padding: 3 }}>
-          <Typography variant="h4" paragraph>
-            Read Allbirds' backstory of how they founded the company and their commitment to sustainability.
+        >
+          Making Better Things in a Better Way Featuring Allbirds
+        </Typography>
+      </Box>
+
+      {/* Story Sections */}
+      <Container maxWidth="lg">
+        {/* Mission Statement */}
+        <Box sx={{ 
+          py: { xs: 8, md: 16 },
+          textAlign: 'center' 
+        }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              color: '#2E5D3F',
+              maxWidth: '700px',
+              mx: 'auto',
+              mb: 6,
+              lineHeight: 1.6
+            }}
+          >
+            We're on a mission to prove that comfort, design, and sustainability aren't mutually exclusive.
           </Typography>
-          <ul>
-            <li>
-              <Typography variant="body1" component="li">
-                BCorp
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body1" component="li">
-                Recycled Packaging
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body1" component="li">
-                Soft & Comfort
-              </Typography>
-            </li>
-          </ul>
-          <Typography variant="body1" paragraph>
-          A native of New Zealand, Tim Brown was always well versed in the magical qualities of merino wool. Inherently curious, he began asking himself why such a remarkable, sustainable resource was virtually absent in the footwear industry. And with that spirit of wonder, the Allbirds journey began.
+          <Divider sx={{ maxWidth: '100px', mx: 'auto', borderColor: '#2E5D3F' }} />
+        </Box>
+
+        {/* Story Grid */}
+        <Grid container spacing={8} sx={{ mb: 12 }}>
+          {/* Image Left + Text Right */}
+          <Grid item xs={12}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 6,
+              alignItems: 'center'
+            }}>
+              <Box sx={{ 
+                flex: 1,
+                height: { xs: '300px', md: '500px' },
+                backgroundImage: 'url(/sustainable-materials.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                borderRadius: 2
+              }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ color: '#2E5D3F', mb: 3 }}>
+                  Sustainable Materials
+                </Typography>
+                <Typography variant="body1" sx={{ 
+                  color: '#445D48',
+                  fontSize: '1.1rem',
+                  lineHeight: 1.8,
+                  mb: 4
+                }}>
+                  Every material we use is carefully selected for its environmental impact. From our signature merino wool to recycled polyester, we're committed to using materials that are better for the planet.
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+
+          {/* Impact Stats */}
+          <Grid item xs={12}>
+            <Box sx={{ 
+              backgroundColor: '#2E5D3F',
+              p: { xs: 4, md: 8 },
+              borderRadius: 2,
+              color: '#FFFFFF',
+              textAlign: 'center'
+            }}>
+              <Typography variant="h4" sx={{ mb: 6 }}>Our Impact</Typography>
+              <Grid container spacing={4}>
+                {[
+                  { stat: '60%', desc: 'Carbon Footprint Reduction' },
+                  { stat: '95%', desc: 'Renewable Materials Used' },
+                  { stat: '100%', desc: 'Recycled Packaging' }
+                ].map((item) => (
+                  <Grid item xs={12} md={4} key={item.stat}>
+                    <Typography variant="h2" sx={{ mb: 2 }}>{item.stat}</Typography>
+                    <Typography variant="body1">{item.desc}</Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* Call to Action */}
+        <Box sx={{ 
+          textAlign: 'center',
+          py: { xs: 8, md: 16 }
+        }}>
+          <Typography variant="h3" sx={{ 
+            color: '#2E5D3F',
+            mb: 4,
+            maxWidth: '600px',
+            mx: 'auto'
+          }}>
+            Join Us in Making a Difference
           </Typography>
-          <Typography variant="body1" paragraph>
-          After years of researching and tinkering, Tim teamed up with Joey Zwillinger, an engineer and renewables expert. Together, they crafted a revolutionary wool fabric made specifically for footwear. The outcome? An entirely new category of shoes inspired by natural materials, and an ongoing mantra to create better things in a better way.          </Typography>
-          <Button variant="outlined" color="primary" sx={{ mt: 2 }}>
-            <Link href="https://www.allbirds.com/pages/our-story" target="_blank" rel="noopener" color="inherit" underline="none">
-            Learn More About Our Practices
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: '#2E5D3F',
+              color: '#FFFFFF',
+              px: 6,
+              py: 2,
+              fontSize: '1.1rem',
+              '&:hover': {
+                backgroundColor: '#1F4030',
+              },
+            }}
+          >
+            <Link src="https://www.allbirds.com/pages/our-story" color="inherit">
+                See Our Story
             </Link>
             
           </Button>
-        </CardContent>
-      </Card>
+        </Box>
+      </Container>
     </Box>
   );
 };
