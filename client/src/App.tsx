@@ -42,7 +42,7 @@ const App = () => {
                     />
                   }
                 /> */}
-                <Route
+                {/* <Route
                   path="/"
                   element={
                     <Navigate
@@ -50,7 +50,7 @@ const App = () => {
                       replace
                     />
                   }
-                />
+                /> */}
                 {/* <Route
                   path="*"
                   element={<ProtectedRoute element={<CatchAll />} />}
