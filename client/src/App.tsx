@@ -52,9 +52,13 @@ const App = () => {
       <CssBaseline />
       <BackendProvider>
         <Router>
-          <Navbar />
           <Routes>
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={
+              <>
+                <Navbar />
+                <Search />
+              </>
+            } />
             <Route path="/landing" element={<Landing />} />
             <Route path="*" element={<Navigate to="/landing" />} />
           </Routes>

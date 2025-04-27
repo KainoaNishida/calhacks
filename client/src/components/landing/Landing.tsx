@@ -131,7 +131,10 @@ const Landing: React.FC = () => {
                 title="Sustainably"
                 subtitle="Shop Sustainably"
                 placeholder="Search for sustainable products..."
-                onSearch={(query) => console.log('Searching for:', query)}
+                onSearch={(query) => {
+                  // Navigate to search page with the query
+                  window.location.href = `/search?q=${encodeURIComponent(query)}`;
+                }}
               />
             </Box>
           </Box>
@@ -415,7 +418,7 @@ const Landing: React.FC = () => {
                     variant="contained"
                     size="large"
                     component={MuiLink}
-                    href="https://www.allbirds.com"
+                    href="https://www.allbirds.com/pages/sustainable-practices?srsltid=AfmBOoqnpolE0dnPoJzcKmWeFV-0x9KmtNyVzDPxno_yxntQiE1nbqrF"
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{

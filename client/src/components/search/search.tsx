@@ -32,6 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 import { useBackendContext } from '@/contexts/hooks/useBackendContext';
 import { SearchContext } from '@/contexts/SearchContext';
+import Footer from '@/components/footer/Footer';
 import { CompanyModal } from '@/components/CompanyModal';
 import axios from 'axios';
 
@@ -75,7 +76,16 @@ interface Product {
 
 export default function Search() {
   const { backend } = useBackendContext();
-  const { searchTerm: q } = useContext(SearchContext);
+  const { searchTerm: q, setSearchTerm } = useContext(SearchContext);
+
+  // Extract query parameter from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get('q');
+    if (queryParam) {
+      setSearchTerm(queryParam);
+    }
+  }, [setSearchTerm]);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [productDBInfo, setProductDBInfo] = useState<any[]>([]);
@@ -331,8 +341,9 @@ export default function Search() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4, marginTop: '80px' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Container maxWidth="lg" sx={{ py: 4, marginTop: '120px', flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" fontWeight="bold">
           Search Results
         </Typography>
@@ -681,5 +692,7 @@ export default function Search() {
         </Box>
       </Modal>
     </Container>
+    <Footer />
+  </Box>
   );
 }
