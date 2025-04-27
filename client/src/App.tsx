@@ -9,7 +9,7 @@ import Search from "@/components/search/search";
 import { BackendProvider } from "@/contexts/BackendContext";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import '@fontsource/roboto';
-        
+
 import {
   Navigate,
   Route,
@@ -52,9 +52,13 @@ const App = () => {
       <CssBaseline />
       <BackendProvider>
         <Router>
-          <Navbar />
           <Routes>
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={
+              <>
+                <Navbar />
+                <Search />
+              </>
+            } />
             <Route path="/landing" element={<Landing />} />
             <Route path="*" element={<Navigate to="/landing" />} />
           </Routes>

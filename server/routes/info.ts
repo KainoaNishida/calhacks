@@ -58,18 +58,18 @@ infoRouter.get("/", async(req, res) => {
 
 infoRouter.get('/:companyName', async (req, res) => {
     const { companyName } = req.params;
-    
+
     try {
       // Query the MongoDB collection to find the company by its name
       await client.connect();
       const db = client.db('green_companies');
       const collection = db.collection('company_info');
       const company = await collection.findOne({ name: companyName });
-      
+
       if (!company) {
         return res.status(404).json({ message: 'Company not found' });
       }
-  
+
       // If the company is found, return the dbInfo
       res.json({ company });
     } catch (error) {
@@ -77,7 +77,7 @@ infoRouter.get('/:companyName', async (req, res) => {
       res.status(500).json({ message: 'Error fetching company info' });
     }
   });
-  
+
 
 infoRouter.get("/esg", async (req, res) => {
     try {
@@ -150,7 +150,7 @@ infoRouter.get("/normalize-esg", async (req, res) => {
       const environmentPerf = company.esg?.peerEnvironmentPerformance;
 
         const updateFields: any = {};
-  
+
         if (rawEsg !== null && !isNaN(rawEsg)) {
           const minValue = 13.44;
           const maxValue = 28.6;
@@ -160,22 +160,22 @@ infoRouter.get("/normalize-esg", async (req, res) => {
 
           // Normalize peerGovernancePerformance
           if (
-            governancePerf && 
-            typeof governancePerf.avg === 'number' && 
-            typeof governancePerf.min === 'number' && 
+            governancePerf &&
+            typeof governancePerf.avg === 'number' &&
+            typeof governancePerf.min === 'number' &&
             typeof governancePerf.max === 'number' &&
             governancePerf.max !== governancePerf.min // prevent divide by 0
           ) {
             const normalizedGovernance = (governancePerf.avg - governancePerf.min) / (governancePerf.max - governancePerf.min);
-    
+
             updateFields['esg.peerGovernancePerformance.normalized'] = normalizedGovernance;
           }
 
           // Normalize peerSocialPerformance
       if (
-        socialPerf && 
-        typeof socialPerf.avg === 'number' && 
-        typeof socialPerf.min === 'number' && 
+        socialPerf &&
+        typeof socialPerf.avg === 'number' &&
+        typeof socialPerf.min === 'number' &&
         typeof socialPerf.max === 'number' &&
         socialPerf.max !== socialPerf.min // prevent divide by 0
       ) {
@@ -185,9 +185,9 @@ infoRouter.get("/normalize-esg", async (req, res) => {
 
       // Normalize peerEnvironmentPerformance
       if (
-        environmentPerf && 
-        typeof environmentPerf.avg === 'number' && 
-        typeof environmentPerf.min === 'number' && 
+        environmentPerf &&
+        typeof environmentPerf.avg === 'number' &&
+        typeof environmentPerf.min === 'number' &&
         typeof environmentPerf.max === 'number' &&
         environmentPerf.max !== environmentPerf.min // prevent divide by 0
       ) {
@@ -201,10 +201,10 @@ infoRouter.get("/normalize-esg", async (req, res) => {
           { $set: updateFields }
         );
       }
-  
+
           // Update the company document with the normalized ESG value
         // await collection.updateOne(
-        //     { _id: company._id }, 
+        //     { _id: company._id },
         //     { $set: { 'esg.totalEsg.normalized': normalizedEsg } }
         // );
         }
