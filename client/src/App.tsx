@@ -1,6 +1,7 @@
 import { Landing } from "@/components/landing/Landing";
 import Navbar from "@/components/navbar/navbar";
 import Search from "@/components/search/search";
+import Blog from "./components/blog/Blog";
 import { BackendProvider } from "@/contexts/BackendContext";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 
@@ -50,6 +51,7 @@ const App = () => {
           <Routes>
             <Route path="/search" element={<Search />} />
             <Route path="/landing" element={<Landing />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="*" element={<Navigate to="/landing" />} />
           </Routes>
         </Router>
