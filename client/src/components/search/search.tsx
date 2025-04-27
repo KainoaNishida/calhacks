@@ -32,6 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 import { useBackendContext } from '@/contexts/hooks/useBackendContext';
 import { SearchContext } from '@/contexts/SearchContext';
+import { CompanyModal } from '@/components/CompanyModal';
 
 interface RawCompany {
   company: string;
@@ -82,6 +83,9 @@ export default function Search() {
   const [modalOpen, setModalOpen] = useState(false);
   const [sortOption, setSortOption] = useState('esg');
   const [filterOpen, setFilterOpen] = useState(false);
+
+  const [companyModalOpen, setCompanyModalOpen] = useState(false);
+
 
   const itemsPerPage = 10;
 
@@ -392,14 +396,26 @@ export default function Search() {
                         size="small"
                         variant="contained"
                         color="primary"
-                        onClick={() => window.open(prod.link, '_blank')}
-                        sx={{ borderRadius: '4px', textTransform: 'none' }}
+                        onClick={() =>{
+                          console.log(prod.companyName)
+                          setSelectedProduct(prod);
+                        } }
+                        sx={{ borderRadius: '4px', textTransform: 'none', backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
                       >
                         View
                       </Button>
                     </Box>
                   </Box>
                 ))}
+                {/* Company Modal */}
+                {selectedProduct && (
+                  <CompanyModal
+                    open={selectedProduct !== null} // Modal open when a product is selected
+                    onClose={() => setSelectedProduct(null)} // Close when modal is closed
+                    companyName={selectedProduct.companyName}
+                    esg={selectedProduct.esg}
+                    link={selectedProduct.link}
+                  />)}
               </Box>
             </Box>
           </Box>
