@@ -1,14 +1,21 @@
-import { Admin } from "@/components/admin/Admin";
-import { CatchAll } from "@/components/CatchAll";
-import { Dashboard } from "@/components/dashboard/Dashboard";
-import { Login } from "@/components/login/Login";
 import { Landing } from "@/components/landing/Landing";
+import Navbar from "@/components/navbar/navbar";
+import Search from "@/components/search/search";
+
+// May Need Later (Auth related)
+
+// import { Admin } from "@/components/admin/Admin";
+// import { CatchAll } from "@/components/CatchAll";
+// import { Dashboard } from "@/components/dashboard/Dashboard";
+// import { Login } from "@/components/login/Login";
+// import { Signup } from "@/components/signup/Signup";
+
 // import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { Signup } from "@/components/signup/Signup";
 // import { AuthProvider } from "@/contexts/AuthContext";
 // import { BackendProvider } from "@/contexts/BackendContext";
 // import { RoleProvider } from "@/contexts/RoleContext";
 // import { CookiesProvider } from "react-cookie";
+
 import {
   Navigate,
   Route,
@@ -20,10 +27,15 @@ const App = () => {
   return (
 
             <Router>
+              <Navbar />
               <Routes>
                 <Route
                   path="/landing"
                   element={<Landing />}
+                />
+                <Route
+                  path="/search"
+                  element={<Search />}
                 />
                 {/* <Route
                   path="/signup"
@@ -42,15 +54,15 @@ const App = () => {
                     />
                   }
                 /> */}
-                <Route
+                {/* <Route
                   path="/"
                   element={
                     <Navigate
                       to="/login"
                       replace
                     />
-                  }
-                />
+                  } */}
+
                 {/* <Route
                   path="*"
                   element={<ProtectedRoute element={<CatchAll />} />}

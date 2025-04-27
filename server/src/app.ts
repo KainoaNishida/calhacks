@@ -1,6 +1,7 @@
-import { verifyToken } from "@/middleware";
+// import { verifyToken } from "@/middleware";
 import { sampleRouter } from "@/routes/sample"; // TODO: delete sample router
-import { usersRouter } from "@/routes/users";
+// import { usersRouter } from "@/routes/users";
+import { infoRouter } from "@/routes/info";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -31,12 +32,13 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
-if (process.env.NODE_ENV === "production") {
-  app.use(verifyToken);
-}
+// if (process.env.NODE_ENV === "production") {
+//   // app.use(verifyToken);
+// }
 
 app.use("/", sampleRouter); // TODO: delete sample endpoint
-app.use("/users", usersRouter);
+// app.use("/users", usersRouter);
+app.use("/info", infoRouter);
 
 app.listen(SERVER_PORT, () => {
   console.info(`Server listening on ${SERVER_PORT}`);

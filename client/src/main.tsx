@@ -1,20 +1,41 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import App from "./App.tsx";
 
-const colors = {
-  brand: {},
+const themeOptions = {
+  palette: {
+    primary: {
+      main: "#FFFFFF",
+    },
+    secondary: {
+      main: "#F9FCF6",
+    },
+    text: {
+      primary: "#FFFFFF",
+      secondary: "#FFFFFF"
+    },
+  },
+  typography: {
+    fontFamily: "'Poppins', 'Roboto', 'Arial', sans-serif",
+    h6: {
+      fontWeight: 600,
+    },
+    button: {
+      textTransform: 'none' as const,
+    },
+  },
+  spacing: 8,
 };
 
-const theme = extendTheme({ colors });
+const theme = createTheme(themeOptions);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ChakraProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <App />
-    </ChakraProvider>
+    </ThemeProvider>
   </StrictMode>
 );
