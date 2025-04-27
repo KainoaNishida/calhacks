@@ -1,11 +1,15 @@
+import { Admin } from "@/components/admin/Admin";
+import { CatchAll } from "@/components/CatchAll";
+import { Dashboard } from "@/components/dashboard/Dashboard";
+import { Login } from "@/components/login/Login";
+import { Signup } from "@/components/signup/Signup";
 import { Landing } from "@/components/landing/Landing";
 import Navbar from "@/components/navbar/navbar";
 import Search from "@/components/search/search";
 import { BackendProvider } from "@/contexts/BackendContext";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
-
 import '@fontsource/roboto';
-
+        
 import {
   Navigate,
   Route,
