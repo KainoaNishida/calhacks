@@ -1,37 +1,54 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Container, Box, Link } from '@mui/material';
+import { Typography, Button, Container, Box, Link } from '@mui/material';
+import SpotlightCard from '../cards/spotlight';
 
-export const Landing: React.FC = () => {
+export const Landing = () => {
     return (
-        <div>
+        
+            <Box sx={{ justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                 {/* Main Content */}
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4, bgcolor: '#F9FBF7', width: "100%" }} >
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                        <Typography variant="h2" component="h1" color='primary' gutterBottom>
+                            Shop Sustainably 
+                        </Typography>
+                        <Button variant="contained" color="primary" size="large" sx={{ mb: 4 }} component={Link} href="/search">
+                            Start
+                        </Button>
+                    </Box>  
+                    
+                    <Box sx={{ mb: 4, textAlign: 'center' }}>
+                        <Typography variant="h5" component="h2" color='primary' gutterBottom>         
+                            Your one-stop solution for all your needs.
+                        </Typography>
+                    </Box>
+                    
+                </Container>
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4, height: '100%' }}>
+                    
 
-            {/* Main Content */}
-            <Container maxWidth="lg" sx={{ textAlign: 'center', padding: 4 }}>
-                <Box id="mission" sx={{ marginBottom: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Our Mission
-                    </Typography>
-                    <Typography variant="body1">
-                        At CompanyName, our mission is to revolutionize the way people interact with technology,
-                        making it more accessible, intuitive, and impactful for everyone.
-                    </Typography>
-                </Box>
+                    <Box sx={{ mb: 4 }}>
+                        <Typography variant="h2" color='primary' gutterBottom>
+                            Our Mission
+                        </Typography>
+                        <Typography variant="h3" color='primary' gutterBottom>
+                            blah blah blah
+                        </Typography>
+                    </Box>
+                    <Box sx={{ mb: 4, height: '50%' }}>
+                        <Typography variant="h2" color='primary' gutterBottom>
+                            Monthly Spotlight
+                        </Typography>
+                        <Box>
+                            <SpotlightCard />
+                        </Box>
+                        
+                    </Box>
+                </Container>
+            </Box>
+           
 
-                <Box sx={{ marginY: 4 }}>
-                    <img
-                        src="vite.svg"
-                        alt="Company Vision"
-                        style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
-                    />
-                </Box>
-
-                <Box id="start" sx={{ marginTop: 4 }}>
-                    <Button variant="contained" color="primary" size="large">
-                        Get Started
-                    </Button>
-                </Box>
-            </Container>
-        </div>
+            
+        
     );
 };
 
