@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Typography, Button, Container, Box, Link as MuiLink, Grid, Card, CardContent, CardMedia, CardActions, Divider } from '@mui/material';
+import { Typography, Button, Container, Box, Link as MuiLink, Grid, Card, CardContent, CardMedia, CardActions } from '@mui/material';
+import Footer from '../footer/Footer';
 import SpotlightCard from '../cards/spotlight';
 import * as THREE from 'three';
 import EcoCarousel from './carousel';
@@ -40,7 +41,7 @@ const Landing: React.FC = () => {
         scaleMobile: 1.0,
         color: 0x00FF62,
         color2: 0x00E5FF,
-        backgroundColor: 0x343434,
+        backgroundColor: 0xffffff,
         points: 12,
         maxDistance: 25,
         spacing: 18,
@@ -81,6 +82,29 @@ const Landing: React.FC = () => {
           }}
         />
 
+        {/* Sustainably Logo in top left */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 20,
+            left: 40,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <Box
+            component="img"
+            src="/logo.png"
+            alt="Sustainably Logo"
+            sx={{
+              height: 50,
+              objectFit: 'contain',
+            }}
+          />
+        </Box>
+
         {/* Hero Content */}
         <Box
           sx={{
@@ -89,23 +113,23 @@ const Landing: React.FC = () => {
             height: '100%',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center', // Center the search box horizontally
             px: { xs: 3, md: 6 },
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             {/* SearchBox component positioned prominently */}
             <Box
               sx={{
                 position: 'relative',
                 zIndex: 10,
-                width: { xs: '100%', md: '70%', lg: '60%' },
-                ml: { xs: 0, md: 4 },
-                mt: { xs: -10, md: 0 },
+                width: { xs: '100%', md: '80%', lg: '70%' }, // Increased width
+                mt: { xs: -5, md: 0 }, // Adjusted top margin
               }}
             >
               <SearchBox
                 title="Sustainably"
-                subtitle="find eco-friendly products"
+                subtitle="Shop Sustainably"
                 placeholder="Search for sustainable products..."
                 onSearch={(query) => console.log('Searching for:', query)}
               />
@@ -450,25 +474,26 @@ const Landing: React.FC = () => {
           >
             Our Team
           </Typography>
-          <Grid container spacing={4} justifyContent="center">
+          <Grid container spacing={4} justifyContent="space-between">
             {[
               {
                 name: 'Kai Nishida',
-                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
-              },
-              {
-                name: 'Ostend Surajaya',
-                image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+                image: './public/kai.jpeg',
               },
               {
                 name: 'Matthew Chang',
-                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+                image: './public/matthew.jpg',
+              },
+              {
+                name: 'Ostend Surajaya',
+                image: './public/ostend.PNG',
               },
             ].map((member, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <Card
                   sx={{
                     height: '100%',
+                    width: '230px',
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: 3,
@@ -491,9 +516,6 @@ const Landing: React.FC = () => {
                     <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
                       {member.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {member.role}
-                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -503,90 +525,7 @@ const Landing: React.FC = () => {
       </Box>
 
       {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          py: 6,
-          px: 3,
-          backgroundColor: '#111',
-          color: 'white',
-          mt: 'auto',
-        }}
-      >
-        <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Sustainably
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 2, color: '#aaa' }}>
-                Connecting conscious consumers with eco-friendly products since 2023.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Quick Links
-              </Typography>
-              <Typography
-                component={MuiLink}
-                href="/search"
-                sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: PRIMARY_GREEN } }}
-              >
-                Discover Products
-              </Typography>
-              <Typography
-                component={MuiLink}
-                href="#"
-                sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: PRIMARY_GREEN } }}
-              >
-                About Us
-              </Typography>
-              <Typography
-                component={MuiLink}
-                href="#"
-                sx={{ display: 'block', mb: 1, color: '#aaa', textDecoration: 'none', '&:hover': { color: PRIMARY_GREEN } }}
-              >
-                Our Mission
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Connect With Us
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 2, color: '#aaa' }}>
-                Join our community and stay updated on the latest sustainable products.
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                {['📱', '📧', '📘', '📸'].map((icon, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.3s',
-                      '&:hover': {
-                        backgroundColor: PRIMARY_GREEN,
-                      },
-                    }}
-                  >
-                    {icon}
-                  </Box>
-                ))}
-              </Box>
-            </Grid>
-          </Grid>
-          <Divider sx={{ my: 4, backgroundColor: 'rgba(255,255,255,0.1)' }} />
-          <Typography variant="body2" sx={{ textAlign: 'center', color: '#aaa' }}>
-            © {new Date().getFullYear()} Sustainably. All rights reserved.
-          </Typography>
-        </Container>
-      </Box>
+      <Footer />
     </Box>
   );
 };
