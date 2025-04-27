@@ -131,7 +131,7 @@ export default function Search() {
               }}
             >
               <img
-                src={dbInfo.img} // Use the imgSrc state to dynamically update the image source
+                src={dbInfo?.img || 'default_image.jpg'} // Use the imgSrc state to dynamically update the image source
                 alt={prod.title}
                 style={{ width: '75px', height: '75px', objectFit: 'contain' }}
               />

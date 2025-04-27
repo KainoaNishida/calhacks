@@ -276,8 +276,6 @@ infoRouter.get("/normalize-esg", async (req, res) => {
     } catch (error) {
         console.error('Error fetching companies or making the search:', error.message);
         res.status(500).json({ message: 'Error fetching companies or making the search', error });
-    } finally {
-        await client.close();
     }
   });
 
