@@ -11,8 +11,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint",
     "format": "npx prettier --write .",
-    "preview": "vite preview",
-    "postinstall": "patch-package"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -21,6 +20,8 @@
     "@hookform/resolvers": "^3.9.0",
     "@mui/material": "^7.0.2",
     "@types/three": "^0.176.0",
+    "@fontsource/roboto": "^5.2.5",
+    "@mui/icons-material": "^7.0.2",
     "axios": "^1.7.4",
     "firebase": "10.12.5",
     "framer-motion": "^11.3.27",

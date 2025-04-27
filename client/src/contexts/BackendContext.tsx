@@ -1,10 +1,8 @@
 import { createContext, ReactNode } from "react";
-
 import axios, { AxiosInstance } from "axios";
 
-import { authInterceptor } from "../utils/auth/authInterceptor";
-
-const baseURL = import.meta.env.VITE_BACKEND_HOSTNAME;
+// Simple version without Firebase auth
+const baseURL = import.meta.env.VITE_BACKEND_HOSTNAME || 'http://localhost:3001';
 
 interface BackendContextProps {
   backend: AxiosInstance;
@@ -18,7 +16,6 @@ export const BackendProvider = ({ children }: { children: ReactNode }) => {
     withCredentials: true,
   });
 
-  authInterceptor(backend);
 
   return (
     <BackendContext.Provider value={{ backend }}>

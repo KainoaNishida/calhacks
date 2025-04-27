@@ -1,25 +1,15 @@
-import {
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
-
-import { auth } from "./firebase";
-
-const facebookProvider = new FacebookAuthProvider();
-const googleProvider = new GoogleAuthProvider();
+// Mock providers since Firebase has been removed
+// No imports needed as Firebase has been removed
 
 /**
- * `signInWithRedirect` is patched!
- *
- * @see {@link client/docs/signInWithRedirect.md} for more detailed documentation.
+ * Mock authentication functions since Firebase has been removed
  */
-const patchedSignInWithRedirect = signInWithRedirect;
-
 export async function authenticateFacebookUser() {
-  await patchedSignInWithRedirect(auth, facebookProvider);
+  console.warn('Firebase has been removed - authenticateFacebookUser is a no-op');
+  return null;
 }
 
 export async function authenticateGoogleUser() {
-  await patchedSignInWithRedirect(auth, googleProvider);
+  console.warn('Firebase has been removed - authenticateGoogleUser is a no-op');
+  return null;
 }
