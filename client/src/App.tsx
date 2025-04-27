@@ -3,6 +3,10 @@ import { CatchAll } from "@/components/CatchAll";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { Login } from "@/components/login/Login";
 import { Landing } from "@/components/landing/Landing";
+
+import Navbar from "@/components/navbar/navbar";
+import Search from "@/components/search/search";
+
 // import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Signup } from "@/components/signup/Signup";
 // import { AuthProvider } from "@/contexts/AuthContext";
@@ -20,7 +24,13 @@ const App = () => {
   return (
 
             <Router>
+              <Navbar />
               <Routes>
+
+                <Route
+                  path="/search"
+                  element={<Search />}
+                />
                 <Route
                   path="/landing"
                   element={<Landing />}
