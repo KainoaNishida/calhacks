@@ -9,7 +9,7 @@ import Search from "@/components/search/search";
 import { BackendProvider } from "@/contexts/BackendContext";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import '@fontsource/roboto';
-        
+
 import {
   Navigate,
   Route,

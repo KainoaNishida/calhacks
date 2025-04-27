@@ -89,16 +89,22 @@ export default function Search() {
 
   const [companyModalOpen, setCompanyModalOpen] = useState(false);
 
-  const ProductRow = ({ prod, setSelectedProduct, dbInfo }) => {
+  interface ProductRowProps {
+    prod: Product;
+    setSelectedProduct: (product: Product) => void;
+    dbInfo: any; // Using any for now, but ideally this should be properly typed
+  }
+
+  const ProductRow = ({ prod, setSelectedProduct, dbInfo }: ProductRowProps) => {
     const [imgSrc, setImgSrc] = useState(prod.thumbnail); // Initially, set the image to the thumbnail
     const [loading, setLoading] = useState(true); // Loading state for the image fetch
     const [error, setError] = useState(null); // Error state for handling failed requests
-  
+
     useEffect(() => {
       console.log("DB Info:", dbInfo);
       console.log("Product db info:", productDBInfo);
     }, [dbInfo]);
-  
+
     return (
       <Box
         key={prod.id}
@@ -131,7 +137,7 @@ export default function Search() {
               }}
             >
               <img
-                src={dbInfo.img} // Use the imgSrc state to dynamically update the image source
+                src={dbInfo?.img || prod.thumbnail} // Add null check and fallback to prod.thumbnail
                 alt={prod.title}
                 style={{ width: '75px', height: '75px', objectFit: 'contain' }}
               />
@@ -152,14 +158,14 @@ export default function Search() {
             </Typography>
           </Box>
         </Box>
-  
+
         {/* Company */}
         <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle' }}>
           <Typography variant="body2" color="text.primary">
             {prod.companyName}
           </Typography>
         </Box>
-  
+
         {/* ESG Score */}
         <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
           <Chip
@@ -169,14 +175,14 @@ export default function Search() {
             sx={{ fontWeight: 'bold', minWidth: '60px' }}
           />
         </Box>
-  
+
         {/* Price */}
         <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
           <Typography variant="body1" fontWeight="bold" color="primary">
             {Array.from({ length: Math.floor(Math.random() * 2) + 1 }).map(() => '$').join('')}
           </Typography>
         </Box>
-  
+
         {/* Rating */}
         <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'center' }}>
           {(() => {
@@ -196,7 +202,7 @@ export default function Search() {
             );
           })()}
         </Box>
-  
+
         {/* Actions */}
         <Box sx={{ display: 'table-cell', p: 2, verticalAlign: 'middle', textAlign: 'right', borderRadius: '0 8px 8px 0' }}>
           <Button
@@ -223,7 +229,7 @@ export default function Search() {
     (async () => {
       setIsLoading(true);
       setError(null);
-  
+
       try {
         const resp = await backend.post<RawCompany[]>('/companies/search', { searchTerm: q });
         const raw = resp.data;
@@ -232,9 +238,9 @@ export default function Search() {
           .map((companyItem, idx) => {
             const first = companyItem.searchResults?.[0];
             if (!first) return null;
-  
+
             const extensions = first.rich_snippet?.bottom?.detected_extensions || {};
-  
+
             return {
               id: idx,
               title: first.title,
@@ -250,11 +256,11 @@ export default function Search() {
             };
           })
           .filter((p): p is Product => p !== null);
-  
+
         setProducts(mapped);
         setPage(1);
         console.log('Products:', mapped);
-  
+
         // Fetch the product DB info for each companyName
         const fetchDBInfo = async () => {
           const dbInfoPromises = mapped.map(async (product) => {
@@ -270,12 +276,12 @@ export default function Search() {
             }
             return { companyName: product.companyName, dbInfo: null };
           });
-  
+
           // Wait for all DB info requests to complete
           const dbInfo = await Promise.all(dbInfoPromises);
           setProductDBInfo(dbInfo);
         };
-  
+
         fetchDBInfo();
       } catch (err: any) {
         setError(err.message || 'Failed to fetch products');
